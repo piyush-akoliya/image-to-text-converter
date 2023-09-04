@@ -1,0 +1,698 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Image Text Converter Term Assigment
+Resources:
+  LoginUser1LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: "term-backend-deployment"
+        S3Key: imageconverter-dev-loginUser1.zip
+      Handler: loginUser.login
+      Runtime: nodejs18.x
+      FunctionName: imageconverter-dev-loginUser1
+      MemorySize: 1024
+      Timeout: 6
+      Role: arn:aws:iam::553472527010:role/LabRole
+  RegisterUser1LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: "term-backend-deployment"
+        S3Key: imageconverter-dev-registerUser1.zip
+      Handler: registerUser.register
+      Runtime: nodejs18.x
+      FunctionName: imageconverter-dev-registerUser1
+      MemorySize: 1024
+      Timeout: 6
+      Role: arn:aws:iam::553472527010:role/LabRole
+  UserDocuments1LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: "term-backend-deployment"
+        S3Key: imageconverter-dev-userDocuments1.zip
+      Handler: userDocuments.userDocuments
+      Runtime: nodejs18.x
+      FunctionName: imageconverter-dev-userDocuments1
+      MemorySize: 1024
+      Timeout: 6
+      Role: arn:aws:iam::553472527010:role/LabRole
+  ImgToText1LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: "term-backend-deployment"
+        S3Key: imageconverter-dev-imgToText1.zip
+      Handler: imgToText.imgToText
+      Runtime: nodejs18.x
+      FunctionName: imageconverter-dev-imgToText1
+      MemorySize: 1024
+      Timeout: 6
+      Role: arn:aws:iam::553472527010:role/LabRole
+  DeleteFile1LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: "term-backend-deployment"
+        S3Key: imageconverter-dev-deleteFile1.zip
+      Handler: deleteFile.deleteFile
+      Runtime: nodejs18.x
+      FunctionName: imageconverter-dev-deleteFile1
+      MemorySize: 1024
+      Timeout: 6
+      Role: arn:aws:iam::553472527010:role/LabRole
+  ApiGatewayRestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: dev-imageconverter
+      EndpointConfiguration:
+        Types:
+          - EDGE
+      Policy: ""
+  ApiGatewayResourceUsers:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - ApiGatewayRestApi
+          - RootResourceId
+      PathPart: users
+      RestApiId:
+        Ref: ApiGatewayRestApi
+  ApiGatewayResourceUsersLogin:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Ref: ApiGatewayResourceUsers
+      PathPart: login
+      RestApiId:
+        Ref: ApiGatewayRestApi
+  ApiGatewayResourceUsersRegister:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Ref: ApiGatewayResourceUsers
+      PathPart: register
+      RestApiId:
+        Ref: ApiGatewayRestApi
+  ApiGatewayResourceUsersConverteddocuments:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Ref: ApiGatewayResourceUsers
+      PathPart: converteddocuments
+      RestApiId:
+        Ref: ApiGatewayRestApi
+  ApiGatewayResourceUsersDeletefile:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Ref: ApiGatewayResourceUsers
+      PathPart: deleteFile
+      RestApiId:
+        Ref: ApiGatewayRestApi
+  ApiGatewayResourceConvertdocument:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - ApiGatewayRestApi
+          - RootResourceId
+      PathPart: convertdocument
+      RestApiId:
+        Ref: ApiGatewayRestApi
+  ApiGatewayMethodUsersLoginOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: "200"
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: "{statusCode:200}"
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: "200"
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+            ResponseTemplates:
+              application/json: ""
+      ResourceId:
+        Ref: ApiGatewayResourceUsersLogin
+      RestApiId:
+        Ref: ApiGatewayRestApi
+  ApiGatewayMethodUsersRegisterOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: "200"
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: "{statusCode:200}"
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: "200"
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+            ResponseTemplates:
+              application/json: ""
+      ResourceId:
+        Ref: ApiGatewayResourceUsersRegister
+      RestApiId:
+        Ref: ApiGatewayRestApi
+  ApiGatewayMethodUsersConverteddocumentsOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: "200"
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: "{statusCode:200}"
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: "200"
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET'"
+            ResponseTemplates:
+              application/json: ""
+      ResourceId:
+        Ref: ApiGatewayResourceUsersConverteddocuments
+      RestApiId:
+        Ref: ApiGatewayRestApi
+  ApiGatewayMethodConvertdocumentOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: "200"
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: "{statusCode:200}"
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: "200"
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+            ResponseTemplates:
+              application/json: ""
+      ResourceId:
+        Ref: ApiGatewayResourceConvertdocument
+      RestApiId:
+        Ref: ApiGatewayRestApi
+  ApiGatewayMethodUsersDeletefileOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
+        - StatusCode: "200"
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+          ResponseModels: {}
+      RequestParameters: {}
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: "{statusCode:200}"
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationResponses:
+          - StatusCode: "200"
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,DELETE'"
+            ResponseTemplates:
+              application/json: ""
+      ResourceId:
+        Ref: ApiGatewayResourceUsersDeletefile
+      RestApiId:
+        Ref: ApiGatewayRestApi
+  ApiGatewayMethodUsersLoginPost:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: POST
+      RequestParameters: {}
+      ResourceId:
+        Ref: ApiGatewayResourceUsersLogin
+      RestApiId:
+        Ref: ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - ":lambda:path/2015-03-31/functions/"
+              - Fn::GetAtt:
+                  - LoginUser1LambdaFunction
+                  - Arn
+              - "/invocations"
+      MethodResponses: []
+    DependsOn:
+      - LoginUser1LambdaPermissionApiGateway
+  ApiGatewayMethodUsersRegisterPost:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: POST
+      RequestParameters: {}
+      ResourceId:
+        Ref: ApiGatewayResourceUsersRegister
+      RestApiId:
+        Ref: ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - ":lambda:path/2015-03-31/functions/"
+              - Fn::GetAtt:
+                  - RegisterUser1LambdaFunction
+                  - Arn
+              - "/invocations"
+      MethodResponses: []
+    DependsOn:
+      - RegisterUser1LambdaPermissionApiGateway
+  ApiGatewayMethodUsersConverteddocumentsGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      RequestParameters:
+        method.request.querystring.email: true
+      ResourceId:
+        Ref: ApiGatewayResourceUsersConverteddocuments
+      RestApiId:
+        Ref: ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - ":lambda:path/2015-03-31/functions/"
+              - Fn::GetAtt:
+                  - UserDocuments1LambdaFunction
+                  - Arn
+              - "/invocations"
+      MethodResponses: []
+      RequestValidatorId:
+        Ref: ApiGatewayImageconverterRequestValidator
+    DependsOn:
+      - UserDocuments1LambdaPermissionApiGateway
+  ApiGatewayMethodConvertdocumentPost:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: POST
+      RequestParameters: {}
+      ResourceId:
+        Ref: ApiGatewayResourceConvertdocument
+      RestApiId:
+        Ref: ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - ":lambda:path/2015-03-31/functions/"
+              - Fn::GetAtt:
+                  - ImgToText1LambdaFunction
+                  - Arn
+              - "/invocations"
+      MethodResponses: []
+    DependsOn:
+      - ImgToText1LambdaPermissionApiGateway
+  ApiGatewayMethodUsersDeletefileDelete:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: DELETE
+      RequestParameters:
+        method.request.querystring.email: true
+        method.request.querystring.documentName: true
+      ResourceId:
+        Ref: ApiGatewayResourceUsersDeletefile
+      RestApiId:
+        Ref: ApiGatewayRestApi
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - ":lambda:path/2015-03-31/functions/"
+              - Fn::GetAtt:
+                  - DeleteFile1LambdaFunction
+                  - Arn
+              - "/invocations"
+      MethodResponses: []
+      RequestValidatorId:
+        Ref: ApiGatewayImageconverterRequestValidator
+    DependsOn:
+      - DeleteFile1LambdaPermissionApiGateway
+  ApiGatewayImageconverterRequestValidator:
+    Type: AWS::ApiGateway::RequestValidator
+    Properties:
+      RestApiId:
+        Ref: ApiGatewayRestApi
+      ValidateRequestBody: true
+      ValidateRequestParameters: true
+      Name: imageconverter-dev | Validate request body and querystring parameters
+  ApiGatewayDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: ApiGatewayRestApi
+      StageName: dev
+    DependsOn:
+      - ApiGatewayMethodUsersLoginOptions
+      - ApiGatewayMethodUsersRegisterOptions
+      - ApiGatewayMethodUsersConverteddocumentsOptions
+      - ApiGatewayMethodConvertdocumentOptions
+      - ApiGatewayMethodUsersDeletefileOptions
+      - ApiGatewayMethodUsersLoginPost
+      - ApiGatewayMethodUsersRegisterPost
+      - ApiGatewayMethodUsersConverteddocumentsGet
+      - ApiGatewayMethodConvertdocumentPost
+      - ApiGatewayMethodUsersDeletefileDelete
+  LoginUser1LambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+          - LoginUser1LambdaFunction
+          - Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: ApiGatewayRestApi
+            - "/*/*"
+  RegisterUser1LambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+          - RegisterUser1LambdaFunction
+          - Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: ApiGatewayRestApi
+            - "/*/*"
+  UserDocuments1LambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+          - UserDocuments1LambdaFunction
+          - Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: ApiGatewayRestApi
+            - "/*/*"
+  ImgToText1LambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+          - ImgToText1LambdaFunction
+          - Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: ApiGatewayRestApi
+            - "/*/*"
+  DeleteFile1LambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+          - DeleteFile1LambdaFunction
+          - Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: ApiGatewayRestApi
+            - "/*/*"
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Users
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  MyS3BucketPiyush:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: term-assignment-b00920744-1
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+  MyBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: MyS3BucketPiyush
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action:
+              - s3:*
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:aws:s3:::"
+                  - Ref: MyS3BucketPiyush
+                  - "/*"
+            Principal: "*"
+  EncryptionKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: Image Converter Encryption Key
+      KeyPolicy:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: Enable IAM User Permissions
+            Effect: Allow
+            Principal:
+              AWS: "*"
+            Action: kms:*
+            Resource: "*"
+          - Sid: Allow access to the key alias
+            Effect: Allow
+            Principal:
+              AWS: "*"
+            Action:
+              - kms:DescribeKey
+              - kms:GetPublicKey
+            Resource: "*"
+          - Sid: Allow key administration for the alias
+            Effect: Allow
+            Principal:
+              AWS: "*"
+            Action:
+              - kms:CreateAlias
+              - kms:DeleteAlias
+              - kms:UpdateAlias
+              - kms:TagResource
+              - kms:UntagResource
+            Resource: "*"
+            Condition:
+              StringEquals:
+                kms:ResourceAlias: alias/encryptionKeys
+  EncryptionKeyAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: alias/encryptionKeys
+      TargetKeyId:
+        Ref: EncryptionKey
+  ImageConverterFrontendApplication:
+    Type: "AWS::ElasticBeanstalk::Application"
+    Properties:
+      Description: "Frontend application for running the Elastic Beanstalk"
+      ApplicationName: "ImageTextExtractor"
+
+  ImageConverterFrontendAppVersion:
+    Type: "AWS::ElasticBeanstalk::ApplicationVersion"
+    Properties:
+      ApplicationName: !Ref ImageConverterFrontendApplication
+      Description: "Application Version of the Frontend App"
+      SourceBundle:
+        S3Bucket: "term-assignment-deployment"
+        S3Key: "ImageToTextConverter.zip"
+
+  ImageConverterFrontendAppConfigTemplate:
+    Type: "AWS::ElasticBeanstalk::ConfigurationTemplate"
+    Properties:
+      ApplicationName: !Ref ImageConverterFrontendApplication
+      Description: "Configuration Template for the Frontend App"
+      SolutionStackName: "64bit Amazon Linux 2 v5.8.4 running Node.js 18"
+      OptionSettings:
+        - Namespace: "aws:autoscaling:launchconfiguration"
+          OptionName: "InstanceType"
+          Value: "t3.micro"
+        - Namespace: "aws:elasticbeanstalk:environment:proxy"
+          OptionName: "ProxyServer"
+          Value: "nginx"
+        - Namespace: "aws:autoscaling:launchconfiguration"
+          OptionName: "IamInstanceProfile"
+          Value: "LabInstanceProfile"
+        - Namespace: "aws:elasticbeanstalk:environment"
+          OptionName: "ServiceRole"
+          Value: "arn:aws:iam::553472527010:role/LabRole"
+        - Namespace: "aws:elasticbeanstalk:application:environment"
+          OptionName: "REACT_APP_BACKEND_URL"
+          Value: !Sub "https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/dev/"
+
+  ImageConverterFrontendAppEnvironment:
+    Type: "AWS::ElasticBeanstalk::Environment"
+    Properties:
+      ApplicationName: !Ref ImageConverterFrontendApplication
+      EnvironmentName: "ImageConverterFrontendEnv"
+      TemplateName: !Ref ImageConverterFrontendAppConfigTemplate
+      VersionLabel: !Ref ImageConverterFrontendAppVersion
+
+Outputs:
+  ServiceEndpoint:
+    Description: URL of the service endpoint
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: ApiGatewayRestApi
+          - ".execute-api."
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - "/dev"
+    Export:
+      Name: sls-imageconverter-dev-ServiceEndpoint

@@ -1,0 +1,40 @@
+.documentConverter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: whitesmoke;
+  padding: 1em;
+}
+
+.uploadingSection {
+  border-radius: 1em;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 3em;
+  margin: 2em;
+}
+
+.documentConverter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fileSubmit-Button {
+  margin-bottom: 2em;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+p {
+  display: flex;
+  justify-content: center;
+}
+
+/* Centering the "Download" buttons in the table */
+tbody tr td:last-child {
+  display: flex;
+  justify-content: center;
+}

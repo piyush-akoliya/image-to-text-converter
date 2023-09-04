@@ -1,0 +1,21 @@
+{
+  "name": "term-assignment",
+  "version": "1.0.0",
+  "description": "Cloud Term assignment",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Piyush Akoliya",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1422.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "form-data": "^4.0.0",
+    "install": "^0.13.0",
+    "npm": "^9.8.1"
+  }
+}

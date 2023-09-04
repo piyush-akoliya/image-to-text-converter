@@ -1,0 +1,30 @@
+/* Add this CSS to center align the elements */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: whitesmoke;
+  /* max-width: 40em; */
+  max-height: 50em;
+  padding: 1em;
+}
+
+.caption {
+  display: flex;
+  text-align: center;
+  justify-content: space-evenly;
+  padding-top: 2em;
+}
+.login {
+  border-radius: 1em;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 1em 5em 1em 5em;
+  margin-top: 1em;
+  min-width: 30em;
+}
+
+#password {
+  margin-bottom: 2em;
+}
